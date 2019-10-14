@@ -1,5 +1,4 @@
 import React from "react";
-import { Auth } from 'aws-amplify';
 import rtcmeshState from './rtcmeshState';
 import send_request from './send_request';
 
