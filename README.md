@@ -30,3 +30,10 @@ my_callback = (data) => {
 
 send_request = (action, service, resource, parameters, this.my_callback);
 ```
+
+## Testing
+
+```
+npm install
+npm test
+```
