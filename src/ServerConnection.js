@@ -8,7 +8,7 @@ class ServerConnection  extends React.Component {
     // We pass a callback function to handle messages to user.
     const { setProp } = rtcmeshState;
     setProp('alertCallback', props.alertCallback); 
-    setProp('onopen', props.onopen);
+    setProp('onOpen', props.onOpen);
   }
   
   componentDidMount() {
@@ -21,15 +21,15 @@ class ServerConnection  extends React.Component {
   
   openConnection = () => {
     const ws                                 = new WebSocket(this.props.REACT_APP_SERVER_URL);
-    const { setProp, alertCallback, onopen } = rtcmeshState;
+    const { setProp, alertCallback, onOpen } = rtcmeshState;
 
     setProp('ws', ws);  
 
     ws.onopen = () => {
       // If user is authenticated we should send a role request here.
       // We should support multiple auth system, initially AWS Cognito
-      if (onopen) { 
-        onopen();
+      if (onOpen) { 
+        onOpen();
       }
     }
 

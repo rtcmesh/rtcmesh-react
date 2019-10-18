@@ -13,7 +13,7 @@ describe('ServerConnection', () => {
             const callback  = (severity, message) => {
                 console.log('alertCallback:', severity, message);
             };
-            const onopen    = () => {
+            const onOpen    = () => {
                 SendRequest('retrieve', 'hc_kld-auction_inventory', 'items', null, (response) => {
                     expect(response.code).toBe(200);
                     expect(response.test).toBe('test');
@@ -31,7 +31,7 @@ describe('ServerConnection', () => {
                 <ServerConnection 
                     REACT_APP_SERVER_URL = {REACT_APP_SERVER_URL} 
                     alertCallback = {callback} 
-                    onopen = {onopen} />
+                    onOpen = {onOpen} />
             );
         });
     });
