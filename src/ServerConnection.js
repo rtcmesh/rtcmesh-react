@@ -1,15 +1,14 @@
 import React from "react";
 import rtcmeshState from './rtcmeshState';
-import send_request from './send_request';
 
 class ServerConnection  extends React.Component {
   
   constructor(props) {
     super(props);
     // We pass a callback function to handle messages to user.
-    const { set_prop } = rtcmeshState;
-    set_prop('alert_callback', props.alert_callback); 
-    set_prop('onopen', props.onopen);
+    const { setProp } = rtcmeshState;
+    setProp('alertCallback', props.alertCallback); 
+    setProp('onopen', props.onopen);
   }
   
   componentDidMount() {
@@ -21,10 +20,10 @@ class ServerConnection  extends React.Component {
   }
   
   openConnection = () => {
-    const ws                                   = new WebSocket(this.props.REACT_APP_SERVER_URL);
-    const { set_prop, alert_callback, onopen } = rtcmeshState;
+    const ws                                 = new WebSocket(this.props.REACT_APP_SERVER_URL);
+    const { setProp, alertCallback, onopen } = rtcmeshState;
 
-    set_prop('ws', ws);  
+    setProp('ws', ws);  
 
     ws.onopen = () => {
       // If user is authenticated we should send a role request here.
@@ -35,8 +34,8 @@ class ServerConnection  extends React.Component {
     }
 
     ws.onclose = () => {
-      set_prop('ws', null);
-      alert_callback('danger', 'Connection to server LOST - Trying to reconnect...');
+      setProp('ws', null);
+      alertCallback('danger', 'Connection to server LOST - Trying to reconnect...');
       setTimeout(function(_this){
         _this.openConnection();
       }, 2000, this)
@@ -49,13 +48,13 @@ class ServerConnection  extends React.Component {
     }
 
     ws.onmessage = (event) => {
-      const { broadcast_callbacks_by_resource, callbacks_by_trans_id } = rtcmeshState;
+      const { broadcastCallbacksByResource, callbacksByTransId } = rtcmeshState;
       const data = JSON.parse(event.data);
       
       if (data.response && data.response.code === 200) {
-        if (callbacks_by_trans_id[data.trans_id]) {
+        if (callbacksByTransId[data.trans_id]) {
           // Call the function that handles the response.
-          callbacks_by_trans_id[data.trans_id](data.response);
+          callbacksByTransId[data.trans_id](data.response);
           // TODO: remove entry on a timer
           
         } else {
@@ -67,8 +66,8 @@ class ServerConnection  extends React.Component {
         console.error('RETURN CODE', data.response.code, data);
       } else {
         // Handle messages sent from the server to clients without a direct corresponding request.
-        if (broadcast_callbacks_by_resource[data.resource]) {
-          broadcast_callbacks_by_resource[data.resource](data.response);
+        if (broadcastCallbacksByResource[data.resource]) {
+          broadcastCallbacksByResource[data.resource](data.response);
           // TODO: remove entry on a timer
         } else {
           console.log('ServerConnection onmessage - message not handled', data);

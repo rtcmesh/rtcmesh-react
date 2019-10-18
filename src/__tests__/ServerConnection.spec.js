@@ -2,7 +2,7 @@ import React from 'react';
 import { create } from 'react-test-renderer';
 import WS from 'jest-websocket-mock';
 import ServerConnection from '../ServerConnection';
-import send_request from '../send_request';
+import SendRequest from '../send_request';
 
 describe('ServerConnection', () => {
     const REACT_APP_SERVER_URL = 'ws: //localhost: 8000/';
@@ -11,10 +11,10 @@ describe('ServerConnection', () => {
         return new Promise((resolve) => {
             const server    = new WS(REACT_APP_SERVER_URL);
             const callback  = (severity, message) => {
-                console.log('alert_callback:', severity, message);
+                console.log('alertCallback:', severity, message);
             };
             const onopen    = () => {
-                send_request('retrieve', 'hc_kld-auction_inventory', 'items', null, (response) => {
+                SendRequest('retrieve', 'hc_kld-auction_inventory', 'items', null, (response) => {
                     expect(response.code).toBe(200);
                     expect(response.test).toBe('test');
                     server.close();
@@ -30,7 +30,7 @@ describe('ServerConnection', () => {
             const serverConnection = create(
                 <ServerConnection 
                     REACT_APP_SERVER_URL = {REACT_APP_SERVER_URL} 
-                    alert_callback = {callback} 
+                    alertCallback = {callback} 
                     onopen = {onopen} />
             );
         });
@@ -47,7 +47,7 @@ describe('ServerConnection', () => {
             const serverConnection = create(
                 <ServerConnection 
                     REACT_APP_SERVER_URL = {REACT_APP_SERVER_URL} 
-                    alert_callback = {callback} />
+                    alertCallback = {callback} />
             );
             server.close();
         });

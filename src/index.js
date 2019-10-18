@@ -1,9 +1,9 @@
 import ServerConnection from './ServerConnection';
-import send_request from './send_request';
-import register_service_callback from './register_service_callback';
+import SendRequest from './send_request';
+import RegisterServiceCallback from './register_service_callback';
 
 export {
   ServerConnection,
-  send_request,
-  register_service_callback
+  SendRequest,
+  RegisterServiceCallback
 }
