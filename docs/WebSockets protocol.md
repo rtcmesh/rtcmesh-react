@@ -49,14 +49,14 @@ Here is a template of JSON message formats for the request, response, and confir
 
 ```
 // request
-{ trans_id   : "22D1C9D59165CD4D498BD8EBC14BCF984DC3",
+{ transId   : "2c592003-1667-491f-8fd2-796acbae198b",
   action     : "retrieve",
   service    : "inventory",
   resource   : "items",
   parameters : {filter : "data->>'deleted' != 'TRUE;"}
 }
 // response
-{ trans_id  : "22D1C9D59165CD4D498BD8EBC14BCF984DC3",
+{ transId  : "2c592003-1667-491f-8fd2-796acbae198b",
   action    : "RETRIEVED",
   service   : "inventory",
   resource  : "items",
