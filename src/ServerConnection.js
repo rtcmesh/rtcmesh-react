@@ -52,7 +52,6 @@ class ServerConnection  extends React.Component {
       const data = JSON.parse(event.data);
       
       if (data.response && data.response.code === 200) {
-        console.log('callbacksByTransId', callbacksByTransId);
         if (callbacksByTransId[data.transId]) {
           // Call the function that handles the response.
           callbacksByTransId[data.transId](data.response);

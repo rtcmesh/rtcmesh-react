@@ -13,15 +13,11 @@ const SendRequest = (action, service, resource, parameters, callback) => {
   const { ws, alertCallback, setProp, callbacksByTransId } = rtcmeshState;
 
   try {
-    if (ws) {
-      ws.send(JSON.stringify(req_msg));
-      // Associate the transId with the callback so when we get the response we call it.
-      callbacksByTransId[transId] = callback;
-      setProp('callbacksByTransId', callbacksByTransId);
-    } else {
-      alertCallback('danger', 'Error sending request to server - Not connected');
-      transId = null;
-    }
+    ws.send(JSON.stringify(req_msg));
+    console.log(JSON.stringify(req_msg));
+    // Associate the transId with the callback so when we get the response we call it.
+    callbacksByTransId[transId] = callback;
+    setProp('callbacksByTransId', callbacksByTransId);
   } catch(e) {
     alertCallback('danger', 'Error sending request to server - \n' + e.message);
     transId = null;
