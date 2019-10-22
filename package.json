@@ -7,7 +7,7 @@
     "start": "webpack --watch",
     "build": "webpack -p"
   },
-  "author": "",
+  "author": "Valerio della Porta",
   "babel": {
     "presets": [
       "@babel/preset-env",
@@ -18,8 +18,8 @@
       "@babel/plugin-proposal-class-properties"
     ]
   },
-  "license": "ISC",
-  "description": "",
+  "license": "GPL-3.0",
+  "description": "React component for communicating with the rtcmesh-server",
   "dependencies": {
     "babel-loader": "^8.0.6",
     "css-loader": "^3.2.0",
@@ -50,5 +50,23 @@
   },
   "jest": {
     "collectCoverage": true
-  }
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rtcmesh/rtcmesh-react.git"
+  },
+  "keywords": [
+    "websockets",
+    "service",
+    "mesh",
+    "react",
+    "real-time"
+  ],
+  "bugs": {
+    "url": "https://github.com/rtcmesh/rtcmesh-react/issues"
+  },
+  "homepage": "https://github.com/rtcmesh/rtcmesh-react#readme"
 }
