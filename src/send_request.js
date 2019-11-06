@@ -4,7 +4,7 @@ const SendRequest = (action, service, resource, parameters, callback) => {
   let transId = generateUUID();
   
   const req_msg = { 
-    transId : transId,
+    trans_id : transId,
     action : action,
     service : service,
     resource : resource,

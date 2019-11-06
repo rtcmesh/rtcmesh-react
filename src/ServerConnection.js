@@ -52,9 +52,9 @@ class ServerConnection  extends React.Component {
       const data = JSON.parse(event.data);
       
       if (data.response && data.response.code === 200) {
-        if (callbacksByTransId[data.transId]) {
+        if (callbacksByTransId[data.trans_id]) {
           // Call the function that handles the response.
-          callbacksByTransId[data.transId](data.response);
+          callbacksByTransId[data.trans_id](data.response);
           // TODO: remove entry on a timer
           
         } else {
