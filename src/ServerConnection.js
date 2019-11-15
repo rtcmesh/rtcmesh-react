@@ -31,6 +31,7 @@ class ServerConnection  extends React.Component {
       if (onOpen) { 
         onOpen();
       }
+      alertCallback('success', 'Connected to server.');
     }
 
     ws.onclose = () => {
