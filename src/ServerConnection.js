@@ -14,7 +14,7 @@ class ServerConnection  extends React.Component {
   componentDidMount() {
     const { ws } = rtcmeshState;
 
-    if (! ws) {
+    if (!ws) {
       this.openConnection();
     }
   }
@@ -35,10 +35,13 @@ class ServerConnection  extends React.Component {
   };
   
   openConnection = () => {
-    const ws                                 = new WebSocket(this.props.REACT_APP_SERVER_URL);
-    const { setProp, alertCallback, onOpen } = rtcmeshState;
-
-    setProp('ws', ws);  
+    const { ws, setProp, alertCallback, onOpen } = rtcmeshState;
+    if (!ws) {
+      const ws = new WebSocket(this.props.REACT_APP_SERVER_URL);
+      setProp('ws', ws);  
+      this.openConnection();
+      return;
+    }
 
     ws.onopen = () => {
       // If user is authenticated we should send a role request here.
