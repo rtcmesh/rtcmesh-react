@@ -121,8 +121,6 @@ describe('ServerConnection', () => {
         });
     });
 
-    
-
     it("Trying to reconnect when server closed.", () => {
         return new Promise((resolve) => {
             const server    = new WS(REACT_APP_SERVER_URL);

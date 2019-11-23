@@ -18,6 +18,21 @@ class ServerConnection  extends React.Component {
       this.openConnection();
     }
   }
+
+  setDeceleratingTimeout = (fn, factor, times, callback) => {
+    var internalCallback = function(tick, counter) {
+        return function() {
+            if (--tick >= 0) {
+                setTimeout(internalCallback, ++counter * factor);
+                fn();
+            } else {
+                callback()
+            }
+        }
+    }(times, 0);
+
+    setTimeout(internalCallback, factor);
+  };
   
   openConnection = () => {
     const ws                                 = new WebSocket(this.props.REACT_APP_SERVER_URL);
@@ -37,9 +52,20 @@ class ServerConnection  extends React.Component {
     ws.onclose = () => {
       setProp('ws', null);
       alertCallback('danger', 'Connection to server LOST - Trying to reconnect...');
-      setTimeout(function(_this){
+      const _this = this;
+      _this.setDeceleratingTimeout(function() {
         _this.openConnection();
-      }, 2000, this)
+      }, 1000 * 2, 3, function() {
+        _this.setDeceleratingTimeout(function() {
+          _this.openConnection();
+        }, 1000 * 10, 6, function() {
+          _this.setDeceleratingTimeout(function() {
+            _this.openConnection();
+          }, 1000 * 60, 20, function() {
+            alertCallback('danger', 'Server is not responding afer repeated attempts; giving up.');
+          });
+        });
+      });
     }
 
     ws.onerror = (event) => {
