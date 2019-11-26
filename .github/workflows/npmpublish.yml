@@ -38,6 +38,7 @@ jobs:
           registry-url: https://npm.pkg.github.com/
           scope: '@valeriod'
       - run: npm ci
+      - run: echo ${{secrets.GITHUB_TOKEN}}
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
