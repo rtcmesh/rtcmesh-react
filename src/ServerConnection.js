@@ -1,5 +1,6 @@
 import React from "react";
 import rtcmeshState from './rtcmeshState';
+import SetDeceleratingTimeout from './util';
 
 class ServerConnection  extends React.Component {
   
@@ -18,21 +19,6 @@ class ServerConnection  extends React.Component {
       this.openConnection();
     }
   }
-
-  setDeceleratingTimeout = (fn, factor, times, callback) => {
-    var internalCallback = function(tick, counter) {
-        return function() {
-            if (--tick >= 0) {
-                setTimeout(internalCallback, ++counter * factor);
-                fn();
-            } else {
-                callback()
-            }
-        }
-    }(times, 0);
-
-    setTimeout(internalCallback, factor);
-  };
   
   openConnection = () => {
     const { ws, setProp, alertCallback, onOpen } = rtcmeshState;
@@ -40,7 +26,7 @@ class ServerConnection  extends React.Component {
       const ws = new WebSocket(this.props.REACT_APP_SERVER_URL);
       setProp('ws', ws);  
       this.openConnection();
-      return;
+      return false;
     }
 
     ws.onopen = () => {
@@ -56,18 +42,25 @@ class ServerConnection  extends React.Component {
       setProp('ws', null);
       alertCallback('danger', 'Connection to server LOST - Trying to reconnect...');
       const _this = this;
-      _this.setDeceleratingTimeout(function() {
-        _this.openConnection();
-      }, 1000 * 2, 3, function() {
-        _this.setDeceleratingTimeout(function() {
-          _this.openConnection();
-        }, 1000 * 10, 6, function() {
-          _this.setDeceleratingTimeout(function() {
-            _this.openConnection();
-          }, 1000 * 60, 20, function() {
-            alertCallback('danger', 'Server is not responding afer repeated attempts; giving up.');
+
+      SetDeceleratingTimeout(function() {
+        return _this.openConnection();
+      }, 1000 * 2, 3, function(success) {
+        if (!success) {
+          SetDeceleratingTimeout(function() {
+            return _this.openConnection();
+          }, 1000 * 10, 6, function(success) {
+            if (!success) {
+              SetDeceleratingTimeout(function() {
+                _this.openConnection();
+              }, 1000 * 60, 20, function(success) {
+                if (!success) {
+                  alertCallback('danger', 'Server is not responding afer repeated attempts; giving up.');
+                }
+              });
+            }
           });
-        });
+        }
       });
     }
 
@@ -104,6 +97,8 @@ class ServerConnection  extends React.Component {
         }
       }
     }
+
+    return false;
   }
   
   render() {

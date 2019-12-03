@@ -1,8 +1,9 @@
 import rtcmeshState from './rtcmeshState';
+import SetDeceleratingTimeout from './util';
 
 const SendRequest = (action, service, resource, parameters, callback) => {
   let transId = generateUUID();
-  
+
   const req_msg = { 
     trans_id : transId,
     action : action,
@@ -10,20 +11,50 @@ const SendRequest = (action, service, resource, parameters, callback) => {
     resource : resource,
     parameters : parameters
   }
-  const { ws, alertCallback, setProp, callbacksByTransId } = rtcmeshState;
+  const { alertCallback } = rtcmeshState;
 
   try {
-    ws.send(JSON.stringify(req_msg));
-    console.log(JSON.stringify(req_msg));
-    // Associate the transId with the callback so when we get the response we call it.
-    callbacksByTransId[transId] = callback;
-    setProp('callbacksByTransId', callbacksByTransId);
+    SetDeceleratingTimeout(function() {
+      return sendMessage(req_msg, callback);
+    }, 1000 * 2, 3, function(success) {
+      if (!success) {
+        SetDeceleratingTimeout(function() {
+          return sendMessage(req_msg, callback);
+        }, 1000 * 10, 6, function(success) {
+          if (!success) {
+            SetDeceleratingTimeout(function() {
+              return sendMessage(req_msg, callback);
+            }, 1000 * 60, 20, function(success) {
+              if (!success) {
+                alertCallback('danger', 'Server is not responding afer repeated attempts; giving up.');
+              }
+            });
+          }
+        });
+      }
+    });
   } catch(e) {
     alertCallback('danger', 'Error sending request to server - \n' + e.message);
     transId = null;
   }
 
   return transId;
+}
+
+const sendMessage = (message, callback) => {
+  const { ws, setProp, callbacksByTransId } = rtcmeshState;
+
+  if (ws.readyState != 1) {
+    return false;
+  }
+
+  ws.send(JSON.stringify(message));
+  console.log(JSON.stringify(message));
+  // Associate the transId with the callback so when we get the response we call it.
+  callbacksByTransId[message.trans_id] = callback;
+  setProp('callbacksByTransId', callbacksByTransId);
+
+  return true;
 }
 
 const generateUUID = () => {

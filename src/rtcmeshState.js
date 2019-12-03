@@ -6,7 +6,7 @@ const rtcmeshState = store({
   broadcastCallbacksByResource : {},
   setProp(key, val){
     rtcmeshState[key] = val;
-  },
+  }
 })
 
 export default rtcmeshState
