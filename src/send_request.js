@@ -44,7 +44,7 @@ const SendRequest = (action, service, resource, parameters, callback) => {
 const sendMessage = (message, callback) => {
   const { ws, setProp, callbacksByTransId } = rtcmeshState;
 
-  if (ws.readyState != 1) {
+  if (!ws || ws.readyState != 1) {
     return false;
   }
 
