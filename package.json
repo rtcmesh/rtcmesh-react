@@ -1,6 +1,6 @@
 {
   "name": "rtcmesh-react",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "main": "build/index.js",
   "scripts": {
     "test": "jest --testTimeout=20000",
