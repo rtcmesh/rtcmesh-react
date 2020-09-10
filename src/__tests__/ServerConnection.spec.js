@@ -42,7 +42,7 @@ describe('ServerConnection', () => {
             const restoreConsole = mockConsole();
             const server    = new WS(REACT_APP_SERVER_URL);
             const callback  = (severity, message) => {
-                console.log('alertCallback:', severity, message);
+                console.error('alertCallback:', severity, message);
             };
             const onOpen    = () => {
                 SendRequest('retrieve', 'hc_kld-auction_inventory', 'items', null, null);
