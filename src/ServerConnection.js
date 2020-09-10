@@ -74,7 +74,7 @@ class ServerConnection  extends React.Component {
       const { broadcastCallbacksByResource, callbacksByTransId } = rtcmeshState;
       const data = JSON.parse(event.data);
 
-      if (data.response && data.response.code === 200) {
+      // if (data.response && data.response.code === 200) {
         if (callbacksByTransId[data.trans_id]) {
           // Call the function that handles the response.
           callbacksByTransId[data.trans_id](data.response);
@@ -89,10 +89,10 @@ class ServerConnection  extends React.Component {
             console.log('ServerConnection onmessage - message not handled', data);
           }
         }
-      } else if(data.response && data.response.code !== 200) {
-        // How we should handle this?
-        console.error('RETURN CODE', data.response.code, data);
-      }
+      // } else if(data.response && data.response.code !== 200) {
+      //   // How we should handle this?
+      //   console.error('RETURN CODE', data.response.code, data);
+      // }
     }
 
     return false;
